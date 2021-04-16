@@ -45,18 +45,19 @@ Krew self-hosts).
 #### Fish shell {#fish}
 
 1. Make sure that `git` is installed.
+1. Display of executed commands with `fish_trace` requires fish 3.1 or later.
 1. Run this command in your terminal to download and install `krew`:
 
     ```fish
     begin
-      set -x; set temp_dir (mktemp -d); cd "$temp_dir" &&
-      set OS (uname | tr '[:upper:]' '[:lower:]') &&
-      set ARCH (uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/') &&
-      curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.tar.gz" &&
-      tar zxvf krew.tar.gz &&
-      set KREWNAME krew-$OS"_"$ARCH &&
-      ./$KREWNAME install krew &&
-      set -e KREWNAME; set -e temp_dir
+      set -l fish_trace 1
+      and set -l temp_dir (mktemp -d); cd "$temp_dir"
+      and set -l OS (uname | tr '[:upper:]' '[:lower:]')
+      and set -l ARCH (uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')
+      and curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.tar.gz"
+      and tar zxvf krew.tar.gz
+      and set -l KREWNAME krew-$OS"_"$ARCH
+      and ./$KREWNAME install krew
     end
     ```
 
